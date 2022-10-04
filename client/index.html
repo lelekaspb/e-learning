@@ -11,8 +11,12 @@
     <section class="container">
       <h1>Welcome to e-learning!</h1>
       <form class="choose-topic">
+        <!-- <label for="users">Choose a user</label>
+        <select id="users" required></select>
+        <div class="greeting"></div> -->
+
         <label for="topics">Choose a topic</label>
-        <select name="topics" id="topics">
+        <select name="topics" id="topics" required>
           <option value="document_db" selected>
             What is a document database
           </option>
@@ -20,10 +24,7 @@
             What is database normalization
           </option>
           <option value="erd">What is an entity relationship diagram</option>
-          <option value="crud">
-            What is a document database method to Create/ Read/ Update/ Delete
-            data
-          </option>
+          <option value="crud">Create/ Read/ Update/ Delete</option>
           <option value="db_install">How do you install a database</option>
           <option value="db_connect_front">
             How does a database connect to a Web Front End

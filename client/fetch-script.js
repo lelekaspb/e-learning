@@ -1,7 +1,8 @@
-const url = "http://127.0.0.1:3000/media";
+const mediaUrl = "http://127.0.0.1:3000/media";
+// const usersUrl = "http://127.0.0.1:3000/users";
 
 export async function fetchMedia(topic) {
-  const getUrl = url + `/${topic}`;
+  const getUrl = mediaUrl + `/${topic}`;
   const options = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -15,3 +16,18 @@ export async function fetchMedia(topic) {
     console.error(err);
   }
 }
+
+// export async function fetchUsers() {
+//   const options = {
+//     method: "GET",
+//     headers: { "Content-Type": "application/json" },
+//   };
+
+//   try {
+//     const response = await fetch(usersUrl, options);
+//     console.log(response.status);
+//     return response.json();
+//   } catch (err) {
+//     console.error(err);
+//   }
+// }
