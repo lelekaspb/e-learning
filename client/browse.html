@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <title>E-learning | Browse</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li class="active">
+            <a href="browse.html">Browse</a>
+          </li>
+          <li>
+            <a href="index.html">Sign In</a>
+          </li>
+          <li>
+            <a href="signup.html">Sign Up</a>
+          </li>
+          <li class="admin-menu-item">
+            <a href="activities.html">Activities</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="container">
+        <form class="choose-topic">
+          <h1>Welcome to e-learning!</h1>
+
+          <div class="greeting"></div>
+
+          <label for="topics">Choose a topic</label>
+          <select name="topics" id="topics" required>
+            <option value="document_db" selected>
+              What is a document database
+            </option>
+            <option value="db_normalization">
+              What is database normalization
+            </option>
+            <option value="erd">What is an entity relationship diagram</option>
+            <option value="crud">Create/ Read/ Update/ Delete</option>
+            <option value="db_install">How do you install a database</option>
+            <option value="db_connect_front">
+              How does a database connect to a Web Front End
+            </option>
+          </select>
+          <button type="submit" class="apply-topics">apply</button>
+        </form>
+      </section>
+      <section class="articles-found"></section>
+    </main>
+    <script type="module" src="js/browse.js"></script>
+  </body>
+</html>

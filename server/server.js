@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 // const hostname = "127.0.0.1";
 
@@ -116,6 +117,134 @@ async function createActivity(studentId, topic) {
     console.error(err);
   }
 }
+
+app.post("/auth/signup", async (req, res) => {
+  const ObjectID = require("mongodb").ObjectId;
+  const userTypeId = ObjectID("6335e9a680608acea431216f");
+  const query = {
+    user_type_id: userTypeId,
+    name: req.body.name,
+    username: req.body.username,
+    password: req.body.password,
+  };
+
+  try {
+    const newUser = await db.collection("users").insertOne(query);
+    if (newUser) {
+      res.statusCode = 201;
+      res.setHeader("Content-Type", "application/json");
+      res.send({
+        success: true,
+        message: "User created",
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 400;
+    res.setHeader("Content-Type", "application/json");
+    res.send({
+      success: true,
+      message: "Could not create the user",
+    });
+  }
+});
+
+app.post("/auth/signin", async (req, res) => {
+  const query = {
+    username: req.body.username,
+  };
+
+  const user = await db.collection("users").findOne(query);
+
+  if (user) {
+    const ObjectID = require("mongodb").ObjectId;
+    const userTypeId = ObjectID(user.user_type_id);
+    const userType = await db
+      .collection("user_types")
+      .findOne({ _id: userTypeId });
+    if (user.password == req.body.password && userType) {
+      // login successful
+      const token = jwt.sign({ _id: user._id }, "dragon");
+      res.status(200).json({
+        user_full_name: user.name,
+        token: token,
+        user_type: userType.user_type_title,
+        success: true,
+        message: `Greetings ${user.name} ! Your user role is ${userType.user_type_title}.`,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: `The password is not correct`,
+      });
+    }
+  } else {
+    res.status(400).json({
+      success: false,
+      message: `User with username ${req.body.username} was not found`,
+    });
+  }
+});
+
+app.get("/students", async (req, res) => {
+  console.log("get students");
+
+  try {
+    let userType = await db
+      .collection("user_types")
+      .findOne({ user_type_title: "student" });
+
+    const ObjectID = require("mongodb").ObjectId;
+    const userTypeId = ObjectID(userType._id);
+    const query = { user_type_id: userTypeId };
+
+    if (userType) {
+      try {
+        const students = await db.collection("users").find(query).toArray();
+        res.status(200).json({
+          success: true,
+          message: "Student list gathered",
+          students: students,
+        });
+      } catch (err) {
+        res
+          .status(400)
+          .json({ success: false, message: "Could not get student list" });
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Could not get student list" });
+  }
+});
+
+app.post("/activities", async (req, res) => {
+  console.log("get activities");
+  const ObjectID = require("mongodb").ObjectId;
+  const studentId = ObjectID(req.body.student_id);
+  const query = { user_id: studentId };
+
+  try {
+    const activities = await db
+      .collection("activities")
+      .find(query)
+      .sort({ date: 1 })
+      .toArray();
+    res.status(200).json({
+      success: true,
+      message: "Gathered activities",
+      activities: activities,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({
+      success: false,
+      message: "Could not fetch activities",
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

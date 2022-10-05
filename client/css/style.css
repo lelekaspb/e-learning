@@ -9,9 +9,20 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+main {
+  margin-top: 50px;
+}
+
 .container {
   max-width: 400px;
   margin-left: 150px;
+}
+
+h1 {
+  color: #ffffff;
+  font-weight: 600;
+  /* margin-top: 50px; */
+  font-size: 2rem;
 }
 
 .choose-topic {
@@ -36,6 +47,21 @@ select {
 
 .greeting {
   height: 50px;
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 200;
+  margin-bottom: 20px;
+}
+
+.greeting.error {
+  color: #bd1b0f;
+  font-weight: 300;
+}
+
+.activities-link {
+  text-decoration: none;
+  color: #008000;
+  font-weight: 300;
 }
 
 select:focus,

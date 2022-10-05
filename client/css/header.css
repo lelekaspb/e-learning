@@ -1,0 +1,28 @@
+/*---header---*/
+header {
+  max-width: 400px;
+  margin-left: 150px;
+}
+
+nav > ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+nav > ul li {
+  margin-right: 2rem;
+  padding: 0.3rem 0;
+}
+
+nav > ul li.active {
+  border-bottom: 1px solid #008800;
+}
+
+nav > ul a {
+  text-decoration: none;
+  color: #afb4af;
+}
+
+nav > ul a.active {
+}
