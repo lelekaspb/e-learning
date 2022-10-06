@@ -45,8 +45,6 @@ app.post("/media", async (req, res) => {
   const topic = req.body.topic;
   let studentId = req.body.user_id;
   const articles = await getArticles(topic);
-  // the articles array is never empty because topic is a part of media document (not separate table)
-  console.log(articles[0].topic.title);
   let title;
   if (articles.length > 0) {
     title = articles[0].topic.title;
@@ -54,7 +52,6 @@ app.post("/media", async (req, res) => {
     title = topic;
   }
 
-  // test data for student ID - get user ID when implementing user authentication
   const ObjectID = require("mongodb").ObjectId;
   studentId = ObjectID(studentId);
 
@@ -95,7 +92,7 @@ async function createActivity(studentId, topic) {
     topic: topic,
     date: new Date(),
   };
-  console.log(query);
+
   try {
     const newActivityResponse = db.collection("activities").insertOne(query);
     return newActivityResponse;
@@ -107,31 +104,51 @@ async function createActivity(studentId, topic) {
 app.post("/auth/signup", async (req, res) => {
   const ObjectID = require("mongodb").ObjectId;
   const userTypeId = ObjectID("6335e9a680608acea431216f");
-  const query = {
-    user_type_id: userTypeId,
-    name: req.body.name,
-    username: req.body.username,
-    password: req.body.password,
-  };
 
+  console.log(req.body.username);
   try {
-    const newUser = await db.collection("users").insertOne(query);
-    if (newUser) {
-      res.statusCode = 201;
+    const userExists = await db
+      .collection("users")
+      .find({ username: req.body.username })
+      .toArray();
+    console.log(await userExists);
+    if ((await userExists.length) == 0) {
+      const query = {
+        user_type_id: userTypeId,
+        name: req.body.name,
+        username: req.body.username,
+        password: req.body.password,
+      };
+
+      try {
+        const newUser = await db.collection("users").insertOne(query);
+        if (newUser) {
+          res.statusCode = 201;
+          res.setHeader("Content-Type", "application/json");
+          res.send({
+            success: true,
+            message: "User created, please proceed to sign in",
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        res.statusCode = 400;
+        res.setHeader("Content-Type", "application/json");
+        res.send({
+          success: false,
+          message: "Could not create the user",
+        });
+      }
+    } else {
+      res.statusCode = 422;
       res.setHeader("Content-Type", "application/json");
       res.send({
-        success: true,
-        message: "User created",
+        success: false,
+        message: `User with username ${req.body.username} already exists`,
       });
     }
   } catch (err) {
     console.error(err);
-    res.statusCode = 400;
-    res.setHeader("Content-Type", "application/json");
-    res.send({
-      success: true,
-      message: "Could not create the user",
-    });
   }
 });
 
@@ -208,7 +225,6 @@ app.get("/students", async (req, res) => {
 });
 
 app.post("/activities", async (req, res) => {
-  console.log("get activities");
   const ObjectID = require("mongodb").ObjectId;
   const studentId = ObjectID(req.body.student_id);
   const query = { user_id: studentId };
@@ -219,7 +235,7 @@ app.post("/activities", async (req, res) => {
       .find(query)
       .sort({ date: 1 })
       .toArray();
-    console.log(activities);
+
     res.status(200).json({
       success: true,
       message: "Gathered activities",

@@ -31,4 +31,10 @@ form.addEventListener("submit", async function (event) {
   };
   const newUserResponse = await createUser(user);
   console.log(newUserResponse);
+  if (await newUserResponse.success) {
+    document.querySelector(".message").classList.remove("error");
+  } else {
+    document.querySelector(".message").classList.add("error");
+  }
+  document.querySelector(".message").textContent = newUserResponse.message;
 });
