@@ -76,10 +76,24 @@ async function getArticles(string) {
   // before creating topic_text index - // const query = { "topic.code": string };
   // example of text index usage from mongo manual -  { $text: { $search: "java coffee shop" } }
   const query = { $text: { $search: string } };
+  // optimizing pipelines:
+  // https://stackoverflow.com/questions/12702080/mongodb-explain-for-aggregation-framework
   try {
-    const articles = db.collection("media").find(query).toArray();
-    // const explain = db.collection("media").find(query).explain();
-    // console.log(await explain);
+    const articles = db
+      .collection("media")
+      .aggregate([
+        { $match: query },
+        {
+          $lookup: {
+            from: "media_type",
+            localField: "media_type_id",
+            foreignField: "_id",
+            as: "media_type_details",
+          },
+        },
+      ])
+      .toArray();
+
     return await articles;
   } catch (err) {
     console.error(err);
