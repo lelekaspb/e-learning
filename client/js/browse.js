@@ -33,6 +33,7 @@ async function getMedia(event) {
     const topic = form.elements.topics.value;
     const userId = sessionStorage.getItem("uid");
     const media = await fetchMedia(topic, userId);
+    console.log(media);
     media.forEach((elem) => {
       const article = createMediaArticle(elem);
       container.appendChild(article);
@@ -69,15 +70,3 @@ function addGreetingMessage(userSignedin) {
     }
   }
 }
-
-// function populateUserOptions(users) {
-//   const list = document.querySelector("#users");
-//   users.forEach((user) => {
-//     const option = document.createElement("option");
-//     option.value = user._id;
-//     option.textContent = user.username;
-//     option.dataset.name = user.name;
-//     // option.dataset.role = user.role;
-//     list.appendChild(option);
-//   });
-// }

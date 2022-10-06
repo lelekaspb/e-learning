@@ -21,15 +21,16 @@ mongodb.connect(
   async function (err, client) {
     db = client.db("e_learning");
     console.log("connected to e_learning");
-    const topicTextIndexExists = await db
-      .collection("media")
-      .indexExists("topic_text");
-    if (!topicTextIndexExists) {
-      const indexResult = await db
-        .collection("media")
-        .createIndex({ topic: "text" });
-      console.log(`Index created: ${indexResult}`);
-    }
+    // const topicTextIndexExists = await db
+    //   .collection("media")
+    //   .indexExists("topic_text");
+    // console.log("topic_text index" + topicTextIndexExists);
+    // if (!topicTextIndexExists) {
+    // const indexResult = await db
+    //   .collection("media")
+    //   .createIndex({ "$**": "text" });
+    // console.log(`Index created: ${indexResult}`);
+    // }
   }
 );
 
@@ -93,9 +94,12 @@ app.post("/media", async (req, res) => {
 });
 
 async function getArticles(string) {
-  // before creating topic_text index - const query = { topic: string };
+  console.log("get articles");
+  // before creating topic_text index -
+  const query = { "topic.code": string };
   // example of text index usage from mongo manual -  { $text: { $search: "java coffee shop" } }
-  const query = { $text: { $search: string } };
+  // const query = { $text: { $search: string } };
+  console.log(query);
   try {
     const articles = db.collection("media").find(query).toArray();
     // const explain = db.collection("media").find(query).explain();
