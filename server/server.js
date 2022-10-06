@@ -21,57 +21,30 @@ mongodb.connect(
   async function (err, client) {
     db = client.db("e_learning");
     console.log("connected to e_learning");
-    // const topicTextIndexExists = await db
-    //   .collection("media")
-    //   .indexExists("topic_text");
-    // console.log("topic_text index" + topicTextIndexExists);
-    // if (!topicTextIndexExists) {
-    // const indexResult = await db
-    //   .collection("media")
-    //   .createIndex({ "$**": "text" });
-    // console.log(`Index created: ${indexResult}`);
+    // if (await db.collection("media").dropIndex("topic_text")) {
+    //   const inxs = await db.collection("media").indexes();
+    //   console.log(inxs);
     // }
+
+    const indexExists = await db
+      .collection("media")
+      .indexExists("topic.code_text");
+    if (!indexExists) {
+      const indexResult = await db
+        .collection("media")
+        .createIndex({ "topic.code": "text" });
+      console.log(`Index created: ${indexResult}`);
+    }
   }
 );
 
 app.use(express.json());
-
-// get all users
-// app.get("/users", async (req, res) => {
-//   const users = await runGetAllUsers();
-//   if (await users) {
-//     res.statusCode = 200;
-//     res.setHeader("Content-Type", "application/json");
-//     res.send(users);
-//   } else {
-//     res.statusCode = 400;
-//     res.setHeader("Content-Type", "application/json");
-//     res.send({
-//       error: "Could not get users",
-//     });
-//   }
-// });
-
-// async function runGetAllUsers() {
-//   try {
-//     // add user type title (user role) as a property for every user object
-//     // https://www.mongodb.com/docs/upcoming/reference/operator/aggregation/lookup/#pipe._S_lookup
-//     // https://stackoverflow.com/questions/2350495/how-do-i-perform-the-sql-join-equivalent-in-mongodb
-//     const users = db.collection("users").find({}).toArray();
-//     console.log(await users);
-//     return await users;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// }
 
 // get media that match queried topic
 app.post("/media", async (req, res) => {
   const topic = req.body.topic;
   let studentId = req.body.user_id;
   const articles = await getArticles(topic);
-  console.log(topic);
-  console.log(studentId);
 
   // test data for student ID - get user ID when implementing user authentication
   const ObjectID = require("mongodb").ObjectId;
@@ -95,11 +68,9 @@ app.post("/media", async (req, res) => {
 
 async function getArticles(string) {
   console.log("get articles");
-  // before creating topic_text index -
-  const query = { "topic.code": string };
+  // before creating topic_text index - // const query = { "topic.code": string };
   // example of text index usage from mongo manual -  { $text: { $search: "java coffee shop" } }
-  // const query = { $text: { $search: string } };
-  console.log(query);
+  const query = { $text: { $search: string } };
   try {
     const articles = db.collection("media").find(query).toArray();
     // const explain = db.collection("media").find(query).explain();

@@ -1,0 +1,6 @@
+1. erd
+2. topic - an embedded document, not a separate table
+3. mongo queries on server side
+3. mongo index on server side
+4. the logic - if you are a student, we register activities; if you are an admin, you can browse the content but activities are not registered
+5. show UI and demonstrate how it works
