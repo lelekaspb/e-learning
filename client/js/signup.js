@@ -2,6 +2,19 @@ import { createUser } from "./fetch-script.js";
 import { checkSignedin } from "./browse.js";
 
 const userType = sessionStorage.getItem("ut");
+if (checkSignedin()) {
+  // hide sign in and up links, show sign out link
+  document.querySelector(".signup-menu-item").hidden = true;
+  document.querySelector(".signin-menu-item").hidden = true;
+  document.querySelector(".signout-menu-item").hidden = false;
+} else {
+  // show sign in and up links, hide sign out link
+  document.querySelector(".signup-menu-item").hidden = false;
+  document.querySelector(".signin-menu-item").hidden = false;
+  document.querySelector(".signout-menu-item").hidden = true;
+  document.querySelector(".admin-menu-item").hidden = true;
+}
+
 if (checkSignedin() && userType == "admin") {
   document.querySelector(".admin-menu-item").hidden = false;
 } else {

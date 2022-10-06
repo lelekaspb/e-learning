@@ -10,7 +10,7 @@ body {
 }
 
 main {
-  max-width: 600px;
+  max-width: 700px;
   margin-left: 150px;
   margin-top: 50px;
 }
@@ -42,13 +42,14 @@ select {
 }
 
 .activities-found {
-  max-width: 600px;
+  max-width: 700px;
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .activity-article {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.5fr 1fr;
   padding: 0.5rem 0;
   border-bottom: 1px solid gray;
 }

@@ -6,6 +6,18 @@ let userSignedIn;
 const greetingsDiv = document.querySelector(".greeting");
 
 const userType = sessionStorage.getItem("ut");
+if (checkSignedin()) {
+  // hide sign in and up links, show sign out link
+  document.querySelector(".signup-menu-item").hidden = true;
+  document.querySelector(".signin-menu-item").hidden = true;
+  document.querySelector(".signout-menu-item").hidden = false;
+} else {
+  // show sign in and up links, hide sign out link
+  document.querySelector(".signup-menu-item").hidden = false;
+  document.querySelector(".signin-menu-item").hidden = false;
+  document.querySelector(".signout-menu-item").hidden = true;
+}
+
 if (checkSignedin() && userType == "admin") {
   document.querySelector(".admin-menu-item").hidden = false;
 } else {
@@ -20,6 +32,9 @@ window.addEventListener("load", async function () {
   if (form) {
     form.addEventListener("submit", getMedia);
   }
+
+  const signoutBtn = document.querySelector(".signout-menu-item");
+  signoutBtn.addEventListener("click", signUserOut);
 });
 
 async function getMedia(event) {
@@ -69,4 +84,10 @@ function addGreetingMessage(userSignedin) {
       greetingsDiv.textContent = "Please sign in order to browse the content.";
     }
   }
+}
+
+function signUserOut(event) {
+  event.preventDefault();
+  sessionStorage.clear();
+  window.location.replace("index.html");
 }

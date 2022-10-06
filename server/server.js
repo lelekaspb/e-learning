@@ -45,12 +45,20 @@ app.post("/media", async (req, res) => {
   const topic = req.body.topic;
   let studentId = req.body.user_id;
   const articles = await getArticles(topic);
+  // the articles array is never empty because topic is a part of media document (not separate table)
+  console.log(articles[0].topic.title);
+  let title;
+  if (articles.length > 0) {
+    title = articles[0].topic.title;
+  } else {
+    title = topic;
+  }
 
   // test data for student ID - get user ID when implementing user authentication
   const ObjectID = require("mongodb").ObjectId;
   studentId = ObjectID(studentId);
 
-  const activity = await createActivity(studentId, topic);
+  const activity = await createActivity(studentId, title);
 
   if ((await articles) && (await activity)) {
     res.statusCode = 200;
@@ -87,7 +95,7 @@ async function createActivity(studentId, topic) {
     topic: topic,
     date: new Date(),
   };
-
+  console.log(query);
   try {
     const newActivityResponse = db.collection("activities").insertOne(query);
     return newActivityResponse;
@@ -211,6 +219,7 @@ app.post("/activities", async (req, res) => {
       .find(query)
       .sort({ date: 1 })
       .toArray();
+    console.log(activities);
     res.status(200).json({
       success: true,
       message: "Gathered activities",

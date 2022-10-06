@@ -4,7 +4,7 @@ export function createMediaArticle(mediaObject) {
 
   const html = `<a href="#" class="media-link">
                     <h3 class="media-heading">
-                        ${mediaObject.topic.title}
+                        ${mediaObject.title}
                     </h3>
                 </a>
                 <p class="media-text">

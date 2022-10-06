@@ -1,6 +1,19 @@
 import { fetchStudents } from "./fetch-script.js";
 import { getActivities } from "./fetch-script.js";
 import { createActivityArticle } from "./activity-component.js";
+import { checkSignedin } from "./browse.js";
+
+if (checkSignedin()) {
+  // hide sign in and up links, show sign out link
+  document.querySelector(".signup-menu-item").hidden = true;
+  document.querySelector(".signin-menu-item").hidden = true;
+  document.querySelector(".signout-menu-item").hidden = false;
+} else {
+  // show sign in and up links, hide sign out link
+  document.querySelector(".signup-menu-item").hidden = false;
+  document.querySelector(".signin-menu-item").hidden = false;
+  document.querySelector(".signout-menu-item").hidden = true;
+}
 
 window.addEventListener("load", async function () {
   console.log("window load");
@@ -24,6 +37,7 @@ function populateStudentOptions(students) {
 
 async function displayActivities(event) {
   const activities = await getActivities(event.target.value);
+  console.log(activities);
 
   const container = document.querySelector(".activities-found");
 
