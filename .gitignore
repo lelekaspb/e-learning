@@ -2,4 +2,5 @@ design
 server/node_modules
 todos.txt
 server/.env
+user_notes.txt
 

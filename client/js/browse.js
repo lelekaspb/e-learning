@@ -17,7 +17,9 @@ window.addEventListener("load", async function () {
   addGreetingMessage(userSignedIn);
 
   const form = document.querySelector(".choose-topic");
-  form.addEventListener("submit", getMedia);
+  if (form) {
+    form.addEventListener("submit", getMedia);
+  }
 });
 
 async function getMedia(event) {
@@ -29,7 +31,8 @@ async function getMedia(event) {
     const container = document.querySelector(".articles-found");
     container.innerHTML = "";
     const topic = form.elements.topics.value;
-    const media = await fetchMedia(topic);
+    const userId = sessionStorage.getItem("uid");
+    const media = await fetchMedia(topic, userId);
     media.forEach((elem) => {
       const article = createMediaArticle(elem);
       container.appendChild(article);
@@ -48,20 +51,22 @@ export function checkSignedin() {
 }
 
 function addGreetingMessage(userSignedin) {
-  if (userSignedin) {
-    const userFullName = sessionStorage.getItem("un");
-    const userType = sessionStorage.getItem("ut");
-    if (userType == "student") {
-      greetingsDiv.textContent = `Hello ${userFullName}, your user role is ${userType}.`;
-    } else if (userType == "admin") {
-      greetingsDiv.innerHTML = `Hello ${userFullName}, your user role is ${userType}. Track students' activities 
-        <a href="activities.html" class="activities-link">
-          here
-        </a>
-      `;
+  if (greetingsDiv) {
+    if (userSignedin) {
+      const userFullName = sessionStorage.getItem("un");
+      const userType = sessionStorage.getItem("ut");
+      if (userType == "student") {
+        greetingsDiv.textContent = `Hello ${userFullName}, your user role is ${userType}.`;
+      } else if (userType == "admin") {
+        greetingsDiv.innerHTML = `Hello ${userFullName}, your user role is ${userType}. Track students' activities 
+          <a href="activities.html" class="activities-link">
+            here
+          </a>
+        `;
+      }
+    } else {
+      greetingsDiv.textContent = "Please sign in order to browse the content.";
     }
-  } else {
-    greetingsDiv.textContent = "Please sign in order to browse the content.";
   }
 }
 

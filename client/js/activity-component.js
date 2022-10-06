@@ -4,7 +4,7 @@ export function createActivityArticle(activityObject) {
 
   const html = `<div class="date">${new Date(
     activityObject.date
-  ).toLocaleDateString()}</div>
+  ).toLocaleDateString("en-GB")}</div>
                 <div class="topic">${activityObject.topic}</div>`;
 
   article.insertAdjacentHTML("afterbegin", html);

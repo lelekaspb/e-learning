@@ -1,15 +1,18 @@
 const mediaUrl = "http://127.0.0.1:3000/media";
 // const usersUrl = "http://127.0.0.1:3000/users";
 
-export async function fetchMedia(topic) {
-  const getUrl = mediaUrl + `/${topic}`;
+export async function fetchMedia(topic, userId) {
   const options = {
-    method: "GET",
+    method: "POST",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      topic: topic,
+      user_id: userId,
+    }),
   };
 
   try {
-    const response = await fetch(getUrl, options);
+    const response = await fetch(mediaUrl, options);
     console.log(response.status);
     return response.json();
   } catch (err) {

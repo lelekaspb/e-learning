@@ -22,6 +22,7 @@ form.addEventListener("submit", async function (event) {
     sessionStorage.setItem("un", signinResponse.user_full_name);
     sessionStorage.setItem("tk", signinResponse.token);
     sessionStorage.setItem("ut", signinResponse.user_type);
+    sessionStorage.setItem("uid", signinResponse.user_id);
     document.querySelector(".message").textContent = signinResponse.message;
     form.querySelectorAll("input").forEach((input) => {
       input.value = "";

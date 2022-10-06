@@ -65,13 +65,16 @@ app.use(express.json());
 // }
 
 // get media that match queried topic
-app.get("/media/:topic", async (req, res) => {
-  const topic = req.params.topic;
+app.post("/media", async (req, res) => {
+  const topic = req.body.topic;
+  let studentId = req.body.user_id;
   const articles = await getArticles(topic);
+  console.log(topic);
+  console.log(studentId);
 
   // test data for student ID - get user ID when implementing user authentication
   const ObjectID = require("mongodb").ObjectId;
-  const studentId = ObjectID("633b0ff35328e48afa29985e");
+  studentId = ObjectID(studentId);
 
   const activity = await createActivity(studentId, topic);
 
@@ -169,6 +172,7 @@ app.post("/auth/signin", async (req, res) => {
         user_full_name: user.name,
         token: token,
         user_type: userType.user_type_title,
+        user_id: user._id,
         success: true,
         message: `Greetings ${user.name} ! Your user role is ${userType.user_type_title}.`,
       });
