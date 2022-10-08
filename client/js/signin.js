@@ -11,6 +11,7 @@ form.addEventListener("submit", async function (event) {
   console.log(signinResponse);
   if (signinResponse.success) {
     document.querySelector(".message").classList.remove("error");
+    document.querySelector(".message").textContent = "";
     sessionStorage.setItem("un", signinResponse.user_full_name);
     sessionStorage.setItem("tk", signinResponse.token);
     sessionStorage.setItem("ut", signinResponse.user_type);
