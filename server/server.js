@@ -92,7 +92,7 @@ app.post("/media", async (req, res) => {
 
 async function getArticles(string) {
   console.log("get articles");
-  // before creating topic_text index - // const query = { "topic.code": string };
+  // before creating topic.code_text index - // const query = { "topic.code": string };
   // example of text index usage from mongo manual -  { $text: { $search: "java coffee shop" } }
   const query = { $text: { $search: string } };
   // optimizing pipelines:
