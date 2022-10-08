@@ -43,31 +43,50 @@ app.use(express.json());
 // get media that match queried topic
 app.post("/media", async (req, res) => {
   const topic = req.body.topic;
-  let studentId = req.body.user_id;
+  let userId = req.body.user_id;
   const articles = await getArticles(topic);
-  let title;
-  if (articles.length > 0) {
-    title = articles[0].topic.title;
-  } else {
-    title = topic;
-  }
 
+  // check if the user is student or admin
   const ObjectID = require("mongodb").ObjectId;
-  studentId = ObjectID(studentId);
+  userId = ObjectID(userId);
+  const user = await db.collection("users").findOne({ _id: userId });
+  console.log(user);
 
-  const activity = await createActivity(studentId, title);
+  const userType = await db
+    .collection("user_types")
+    .findOne({ _id: ObjectID(user.user_type_id) });
+  console.log(userType);
 
-  if ((await articles) && (await activity)) {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.send(articles);
+  // if user role is student - create new activity for this user
+  if (userType.user_type_title == "student") {
+    let title;
+    if (articles.length > 0) {
+      title = articles[0].topic.title;
+    } else {
+      title = topic;
+    }
+
+    const activity = await createActivity(userId, title);
+
+    if ((await articles) && (await activity)) {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.send(articles);
+    } else {
+      res.statusCode = 400;
+      res.setHeader("Content-Type", "application/json");
+      res.send({
+        success: false,
+        message: "Error while fetching articles or posting new activity",
+      });
+    }
   } else {
-    res.statusCode = 400;
-    res.setHeader("Content-Type", "application/json");
-    res.send({
-      success: false,
-      message: "Error while fetching articles or posting new activity",
-    });
+    // if user role is admin - do not register new activity, simply respond with acticles array
+    if (await articles) {
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.send(articles);
+    }
   }
 });
 

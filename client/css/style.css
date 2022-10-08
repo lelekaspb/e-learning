@@ -113,3 +113,32 @@ option {
   margin-top: 0;
   font-size: 13px;
 }
+
+.video-container {
+  display: grid;
+  grid-template-columns: 0.4fr 1fr;
+  gap: 2rem;
+  margin-top: 10px;
+}
+
+video {
+  max-width: 200px;
+  height: auto;
+}
+
+.audio-container {
+  display: grid;
+  grid-template-columns: 0.4fr 1fr;
+  gap: 2rem;
+}
+
+audio {
+  filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);
+  max-width: 200px;
+  height: 40px;
+  margin-top: 5px;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #374945;
+}
