@@ -2,5 +2,7 @@ design
 server/node_modules
 todos.txt
 server/.env
+server/notes
+
 
 

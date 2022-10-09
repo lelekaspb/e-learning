@@ -98,7 +98,7 @@ async function getArticles(string) {
   // optimizing pipelines:
   // https://stackoverflow.com/questions/12702080/mongodb-explain-for-aggregation-framework
   try {
-    const articles = db
+    const articles = await db
       .collection("media")
       .aggregate([
         { $match: query },
@@ -223,6 +223,7 @@ app.post("/auth/signin", async (req, res) => {
   }
 });
 
+// get all students for admin to track activities by
 app.get("/students", async (req, res) => {
   console.log("get students");
 
@@ -257,6 +258,7 @@ app.get("/students", async (req, res) => {
   }
 });
 
+// get activities by student's id
 app.post("/activities", async (req, res) => {
   const ObjectID = require("mongodb").ObjectId;
   const studentId = ObjectID(req.body.student_id);

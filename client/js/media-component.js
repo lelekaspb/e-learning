@@ -26,7 +26,11 @@ export function createMediaArticle(mediaObject) {
                         <source data-src="#" type="video/mp4">
                     </video>
                     <p class="media-text">
-                        ${mediaObject.description.substring(0, 200)} ...
+                        ${
+                          mediaObject.description.length > 200
+                            ? mediaObject.description.substring(0, 200) + " ..."
+                            : mediaObject.description
+                        }
                     </p>
                 </div>`;
       break;
@@ -44,6 +48,10 @@ export function createMediaArticle(mediaObject) {
                         ${mediaObject.description.substring(0, 200)} ...
                     </p>
                 </div>`;
+      break;
+    case undefined:
+      break;
+    default:
       break;
   }
 
